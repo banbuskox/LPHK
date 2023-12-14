@@ -115,6 +115,24 @@ def save_lp_to_layout(name):
     
     save_layout(layout=layout, name=name)
 
+def return_lp_as_layout():
+    layout = dict()
+    layout["version"] = FILE_VERSION
+    
+    layout["buttons"] = []
+    for x in range(9):
+        layout["buttons"].append([])
+        for y in range(9):
+            color = lp_colors.curr_colors[x][y]
+            script_text = scripts.text[x][y]
+            
+            layout["buttons"][-1].append({"color": color, "text": script_text})
+    return layout
+
+def save_layout_as_default(name, layout):
+    with open(name, "w") as f:
+        json.dump(layout, f, indent=2, sort_keys=True)
+
 def load_layout_to_lp(name, popups=True, save_converted=True, preload=None):
     global curr_layout
     global in_error

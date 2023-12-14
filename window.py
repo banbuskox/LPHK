@@ -110,6 +110,7 @@ class Main_Window(tk.Frame):
         self.m_Layout.add_command(label="Load Layout", command=self.load_layout)
         self.m_Layout.add_command(label="Save Layout", command=self.save_layout)
         self.m_Layout.add_command(label="Save Layout As...", command=self.save_layout_as)
+        self.m_Layout.add_command(label="Set Current As Startup Layout", command=self.startup_layout)
         self.m.add_cascade(label="Layout", menu=self.m_Layout)
 
         self.disable_menu("Layout")
@@ -123,7 +124,7 @@ class Main_Window(tk.Frame):
         self.m_Help.add_command(label="User Folder...", command=open_user_folder)
         open_prog_folder = lambda: files.open_file_folder(PROG_PATH)
         self.m_Help.add_command(label="Program Folder...", command=open_prog_folder)
-        display_info = lambda: self.popup(self, "About LPHK", self.about_image, "A Novation Launchpad Macro Scripting System\nMade by Ella Jameson (nimaid)\n\nVersion: " + VERSION + "\nFile format version: " + files.FILE_VERSION, "Done")
+        display_info = lambda: self.popup(self, "About LPHK", self.about_image, "A Novation Launchpad Macro Scripting System\nMade by Ella Jameson (nimaid) and updated by Banbus (banbuskox)\n\nVersion: " + VERSION + "\nFile format version: " + files.FILE_VERSION, "Done")
         self.m_Help.add_command(label="About LPHK", command=display_info)
         self.m.add_cascade(label="Help", menu=self.m_Help)
 
@@ -207,8 +208,8 @@ class Main_Window(tk.Frame):
             self.stat["text"] = f"Connected to {lpcon.get_display_name(lp)}"
             self.stat["bg"] = STAT_ACTIVE_COLOR
             # search for a startup layout and load it
-            if os.path.isfile(os.path.join(files.LAYOUT_PATH, "startup.lpl")):
-                files.load_layout_to_lp(os.path.join(files.LAYOUT_PATH, "startup.lpl"))
+            if os.path.isfile(os.path.join(PATH, "startup.lpl")):
+                files.load_layout_to_lp(os.path.join(PATH, "startup.lpl"))
 
     def disconnect_lp(self):
         global lp_connected
@@ -265,6 +266,9 @@ class Main_Window(tk.Frame):
         else:
             files.save_lp_to_layout(files.curr_layout)
             files.load_layout_to_lp(files.curr_layout)
+
+    def startup_layout(self):
+        files.save_layout_as_default(os.path.join(PATH, "startup.lpl"), files.return_lp_as_layout())
     
     def click(self, event):
         gap = int(BUTTON_SIZE // 4)
